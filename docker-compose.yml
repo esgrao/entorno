@@ -60,32 +60,6 @@ services:
     networks:
       - frontend
       - backend
-  mimvc: #sitio con material del profesor
-    build: ./dockerfiles/dwes
-    container_name: mimvc
-    hostname: mimvc
-    volumes:
-      - /home/alumno/dwes/ex/DA_matricula_mvc:/var/www/html
-    environment:
-      - VIRTUAL_HOST=mimvc.local
-    restart: always
-    networks:
-      - frontend
-      - backend
-  pelu: #sitio para el proyecto de peluquería.
-    build: ./dockerfiles/dwes
-    container_name: pelu
-    hostname: pelu
-    volumes:
-      #si no existe sitios/pelu se creará vacío (prop. root)
-      #dará error "forbidden"
-      - /home/alumno/fifa_alcobendas:/var/www/html
-    environment:
-      - VIRTUAL_HOST=pelu.local
-    restart: always
-    networks:
-      - frontend
-      - backend
   laravel:
     build:
       context: './dockerfiles/laravel'
@@ -99,7 +73,24 @@ services:
       - APACHE_RUN_GROUP=#1000
       - VIRTUAL_HOST=laravel.local
     volumes:
-      - /home/alumno/dwes/ex/fifa_alcobendas:/var/www/html
+      - /home/alumno/dwes/UD5/clase00:/var/www/html
+    networks:
+      - frontend
+      - backend
+  chapp:
+    build:
+      context: './dockerfiles/laravel'
+      args:
+        uid: 1000
+    container_name: chapp
+    depends_on:
+      - db
+    environment:
+      - APACHE_RUN_USER=#1000
+      - APACHE_RUN_GROUP=#1000
+      - VIRTUAL_HOST=chapp.local
+    volumes:
+      - /home/alumno/app:/var/www/html
     networks:
       - frontend
       - backend
